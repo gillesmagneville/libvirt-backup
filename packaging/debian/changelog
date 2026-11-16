@@ -1,0 +1,46 @@
+libvirt-backup (@VERSION@-@REVISION@) unstable; urgency=medium
+
+  * Multilingual: the command line and the graphical interface speak English,
+    French, German and Spanish. The language comes from --language, then
+    LIBVIRT_BACKUP_LANG, then the "language" setting (or, for the window, the
+    Preferences), then the system language; English is the fallback. The
+    confirmation words are localized (the French ones are always accepted).
+  * Backup progress gauge: a bar with a percentage in the terminal, "progress"
+    events in the --json stream and a gauge with the percentage in the window.
+  * Graphical interface: menu with Preferences (language), About and Quit
+    (Ctrl+Q, with a confirmation while an operation is running); the About
+    window gives the version, the build date, the developer, the Claude.ai
+    credit, the GPL v3 licence and the project page.
+  * Licence: GNU GPL v3. The packages ship the README, the changelog, the
+    security policy and the code of conduct (English and French), the AppStream
+    metadata (GUI package) and a French man page.
+
+ -- @MAINTAINER@  @DATE@
+
+libvirt-backup (@VERSION@-@REVISION@) unstable; urgency=medium
+
+  * Much faster backup: the content is decided once (explicit list handed to
+    tar); compiled executables and very large files of /usr/local/{sbin,bin}
+    are skipped (lean_backup setting, --full archives everything); the virsh
+    calls and the inventory commands run in parallel; the manifest comes first
+    in the archive. The duration of each phase is printed; "backup --dry-run"
+    describes the content without writing anything.
+  * New "delete" command and "Delete..." button (with a warning) to remove a
+    chosen archive.
+  * Complete icon set: SVG, small-size variant, PNG from 16 to 512 px,
+    symbolic icon; icons on the buttons of the interface.
+  * Fix: the activity indicator of non-interactive output added up to one
+    second to each step.
+
+ -- @MAINTAINER@  @DATE@
+
+libvirt-backup (@VERSION@-@REVISION@) unstable; urgency=medium
+
+  * Debian packages: libvirt-backup (command line + watcher service) and
+    libvirt-backup-gui (GTK4 interface, polkit rule, menu entry).
+  * The programs live in /usr/bin; "libvirt-backup install" creates the
+    settings and the service, and offers the archive folder.
+  * Every archive contains a copy of the tool in the /usr/local layout: a bare
+    machine can be restored without installing the package.
+
+ -- @MAINTAINER@  @DATE@

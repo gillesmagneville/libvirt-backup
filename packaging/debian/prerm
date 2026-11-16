@@ -1,0 +1,26 @@
+#!/bin/sh
+# prerm de libvirt-backup : le programme va disparaître, le service de surveillance doit donc s'arrêter
+# et ne plus démarrer au boot. L'unité et les réglages restent (ils ne sont pas dans le paquet) ;
+# « purge » les retire (voir postrm). Les archives ne sont jamais touchées.
+set -e
+
+SERVICE=libvirt-config-backup-watch.service
+UNIT=/etc/systemd/system/$SERVICE
+
+ours() { [ -f "$UNIT" ] && grep -qx 'ExecStart=/usr/bin/libvirt-backup watch' "$UNIT"; }
+
+case "$1" in
+remove | deconfigure)
+    if ours && [ -d /run/systemd/system ]; then
+        systemctl stop "$SERVICE" || true
+        systemctl disable "$SERVICE" || true
+    fi
+    ;;
+upgrade | failed-upgrade) ;;
+*)
+    echo "prerm appelé avec un argument inconnu : $1" >&2
+    exit 1
+    ;;
+esac
+
+exit 0

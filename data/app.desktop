@@ -1,0 +1,20 @@
+[Desktop Entry]
+Type=Application
+Name=libvirt Backup
+GenericName=Virtualization configuration backup
+GenericName[fr]=Sauvegarde de la configuration de virtualisation
+GenericName[de]=Sicherung der Virtualisierungskonfiguration
+GenericName[es]=Copia de seguridad de la configuración de virtualización
+Comment=Back up and restore the libvirt/QEMU configuration of the host
+Comment[fr]=Sauvegarder et restaurer la configuration libvirt/QEMU de l'hôte
+Comment[de]=Die libvirt/QEMU-Konfiguration des Hosts sichern und wiederherstellen
+Comment[es]=Hacer copia de seguridad y restaurar la configuración libvirt/QEMU del host
+Exec=/usr/local/bin/libvirt-backup-gui
+Icon=io.github.gillesmagneville.LibvirtBackup
+Terminal=false
+Categories=System;Utility;
+Keywords=libvirt;qemu;kvm;vm;backup;restore;
+Keywords[fr]=libvirt;qemu;kvm;vm;sauvegarde;restauration;
+Keywords[de]=libvirt;qemu;kvm;vm;sicherung;backup;wiederherstellung;
+Keywords[es]=libvirt;qemu;kvm;vm;copia de seguridad;respaldo;restauración;
+StartupWMClass=io.github.gillesmagneville.LibvirtBackup

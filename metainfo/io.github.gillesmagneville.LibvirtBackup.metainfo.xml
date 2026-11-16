@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  AppStream metadata for libvirt Backup (installed by the libvirt-backup-gui package).
+
+  The <id> must match the name of the file itself
+  (io.github.gillesmagneville.LibvirtBackup.metainfo.xml) and the <launchable> must match
+  the name of the installed .desktop file (io.github.gillesmagneville.LibvirtBackup.desktop).
+-->
+<component type="desktop-application">
+  <id>io.github.gillesmagneville.LibvirtBackup</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-only</project_license>
+
+  <name>libvirt Backup</name>
+  <summary>Back up and restore the configuration of a libvirt/QEMU host</summary>
+  <summary xml:lang="fr">Sauvegarde et restaure la configuration d'un hôte libvirt/QEMU</summary>
+  <summary xml:lang="es">Copia de seguridad y restauración de la configuración de un host libvirt/QEMU</summary>
+  <summary xml:lang="de">Sichert und stellt die Konfiguration eines libvirt/QEMU-Hosts wieder her</summary>
+
+  <description>
+    <p>
+      libvirt Backup saves the persistent state of your virtual machines: the
+      libvirt definitions, networks and pools, UEFI NVRAM and TPM state,
+      AppArmor profiles, systemd units, VFIO/GRUB settings and your local
+      scripts. It works from this graphical interface or from the command
+      line, automatically (watcher service) or on demand, and shows the
+      progress of every backup.
+    </p>
+    <p xml:lang="fr">
+      libvirt Backup sauvegarde l'état persistant de vos machines virtuelles :
+      définitions, réseaux et pools libvirt, états UEFI NVRAM et TPM, profils
+      AppArmor, unités systemd, réglages VFIO/GRUB et vos scripts locaux. Il
+      s'utilise depuis cette interface graphique ou en ligne de commande,
+      automatiquement (service de surveillance) ou à la demande, et affiche
+      la progression de chaque sauvegarde.
+    </p>
+    <p xml:lang="es">
+      libvirt Backup guarda el estado persistente de sus máquinas virtuales:
+      definiciones, redes y pools de libvirt, estados UEFI NVRAM y TPM,
+      perfiles de AppArmor, unidades de systemd, ajustes de VFIO/GRUB y sus
+      scripts locales. Se utiliza desde esta interfaz gráfica o desde la
+      línea de comandos, automáticamente (servicio de vigilancia) o a
+      petición, y muestra el progreso de cada copia.
+    </p>
+    <p xml:lang="de">
+      libvirt Backup sichert den dauerhaften Zustand Ihrer virtuellen
+      Maschinen: libvirt-Definitionen, Netzwerke und Pools, UEFI-NVRAM- und
+      TPM-Zustände, AppArmor-Profile, systemd-Units, VFIO/GRUB-Einstellungen
+      und Ihre lokalen Skripte. Es lässt sich über diese grafische
+      Oberfläche oder die Befehlszeile bedienen, automatisch (Überwachungsdienst)
+      oder bei Bedarf, und zeigt den Fortschritt jeder Sicherung an.
+    </p>
+    <p>
+      You choose where the archives go (internal disk, USB drive, network
+      share). The tool itself is part of every archive, so a bare machine can
+      be restored from a single archive.
+    </p>
+    <p xml:lang="fr">
+      Vous choisissez où vont les archives (disque interne, clé USB, partage
+      réseau). L'outil fait lui-même partie de chaque archive : une machine
+      vierge se restaure à partir d'une seule archive.
+    </p>
+    <p xml:lang="es">
+      Usted elige dónde se guardan los archivos (disco interno, memoria USB,
+      recurso de red). La propia herramienta forma parte de cada archivo, de
+      modo que una máquina en blanco se restaura a partir de uno solo.
+    </p>
+    <p xml:lang="de">
+      Sie wählen, wohin die Archive gehen (interne Platte, USB-Stick,
+      Netzwerkfreigabe). Das Werkzeug selbst ist in jedem Archiv enthalten:
+      Ein leerer Rechner lässt sich aus einem einzigen Archiv wiederherstellen.
+    </p>
+  </description>
+
+  <launchable type="desktop-id">io.github.gillesmagneville.LibvirtBackup.desktop</launchable>
+
+  <url type="homepage">https://github.com/gillesmagneville/libvirt-backup</url>
+  <url type="bugtracker">https://github.com/gillesmagneville/libvirt-backup/issues</url>
+  <url type="vcs-browser">https://github.com/gillesmagneville/libvirt-backup</url>
+
+  <provides>
+    <binary>libvirt-backup-gui</binary>
+    <binary>libvirt-backup</binary>
+  </provides>
+
+  <categories>
+    <category>System</category>
+    <category>Utility</category>
+  </categories>
+
+  <keywords>
+    <keyword>libvirt</keyword>
+    <keyword>qemu</keyword>
+    <keyword>kvm</keyword>
+    <keyword>backup</keyword>
+  </keywords>
+
+  <supports>
+    <control>pointing</control>
+    <control>keyboard</control>
+  </supports>
+
+  <releases>
+    <release version="2.3.0" date="2026-11-16"/>
+  </releases>
+
+  <content_rating type="oars-1.1"/>
+
+  <developer id="gillesmagneville">
+    <name>Gilles MAGNEVILLE</name>
+  </developer>
+</component>

@@ -1,0 +1,118 @@
+.TH LIBVIRT-BACKUP 1 "@DATE_MAN@" "libvirt-backup @VERSION@" "User Commands"
+.SH NAME
+libvirt-backup \- back up and restore the configuration of a libvirt/QEMU host
+.SH SYNOPSIS
+.B libvirt-backup
+[\fIOPTIONS\fR] \fICOMMAND\fR [\fIARGS\fR]
+.SH DESCRIPTION
+Backs up the configuration of a virtualization host (libvirt definitions, networks, pools, UEFI NVRAM and TPM
+state, AppArmor profiles, systemd units, VFIO/GRUB/initramfs settings, local scripts) into
+.B libvirt-config-*.tar.gz
+archives, and restores it with the original owners, modes and ACLs.
+The tool itself is part of every archive, so a bare machine can be restored from a single archive.
+.PP
+Commands that need root re-run themselves through
+.BR sudo (8)
+when started from a terminal. The graphical interface,
+.BR libvirt-backup-gui ,
+uses
+.BR pkexec (1).
+.SH COMMANDS
+.TP
+.B backup \fR[\fB\-\-if\-changed\fR] [\fB\-\-dry\-run\fR] [\fB\-\-full\fR]
+Create an archive now. The archive holds the libvirt configuration, hooks and local scripts, not disks.
+By default (\fBlean_backup\fR) compiled executables and files over 1 MiB in /usr/local/sbin and /usr/local/bin,
+and any file over 16 MiB elsewhere, are left out; the skipped files are listed.
+\fB\-\-full\fR archives everything for this run; \fB\-\-dry\-run\fR shows what would be archived
+(per group: files, size, skipped) and writes nothing. The duration of each phase is printed.
+In a terminal a progress gauge (\fB[\(**\(**\(**\(**----] 42 %\fR) shows how far the backup is; with \fB\-\-json\fR the same
+progress is sent as \fBprogress\fR events (a \fBfraction\fR between 0 and 1).
+.TP
+.B list
+List the archives of the backup folder.
+.TP
+.B info \fIARCHIVE\fR
+Show an archive's content by group and its embedded README.
+.TP
+.B verify \fR[\fIARCHIVE\fR] [\fB\-\-all\fR]
+Check integrity (full gzip CRC) and format.
+.TP
+.B delete \fIARCHIVE\fR... [\fB\-\-yes\fR]
+Permanently delete archives of the backup folder (numbers from
+.BR list ,
+names or \fBlatest\fR). No other file can be deleted. Interactive confirmation word: DELETE
+(SUPPRIMER, L\(:OSCHEN or ELIMINAR in French, German or Spanish; SUPPRIMER is accepted in every language);
+without a terminal \fB\-\-yes\fR is required. The \fIlibvirt-config-latest.tar.gz\fR link follows the newest
+remaining archive, or is removed when none is left. Refused while a backup or restore is running.
+.TP
+.B restore \fR[\fIARCHIVE\fR|\fB\-\-latest\fR] [\fB\-\-only\fR \fIG,...\fR] [\fB\-\-skip\fR \fIG,...\fR] [\fB\-\-dry\-run\fR] [\fB\-\-yes\fR]
+Restore (merge, nothing is deleted) after creating a safety archive.
+Interactive confirmation word: RESTORE (RESTAURER, WIEDERHERSTELLEN or RESTAURAR in French, German or Spanish;
+RESTAURER is accepted in every language).
+.I ARCHIVE
+is a number from
+.BR list ,
+a file name or any path (USB drive, copy...).
+.TP
+.B install \fR[\fB\-\-user\fR \fIU\fR] [\fB\-\-retention\fR \fIN\fR] [\fB\-\-no\-first\-backup\fR] [\fB\-\-yes\fR]
+Create the settings and the watcher service, ask where archives go, make a first backup.
+.TP
+.B uninstall \fR[\fB\-\-purge\fR]
+Remove the watcher service; with \fB\-\-purge\fR also the settings. Archives are never removed.
+.TP
+.B service \fR{status,start,stop,restart,enable,disable}
+Drive the watcher service (libvirt-config-backup-watch.service).
+.TP
+.B status
+Installation, service and archives.
+.TP
+.B config \fR{show|set \fIKEY=VALUE\fR...}
+Settings: backup_user, backup_dir, retention, safety_retention, debounce, lean_backup, language
+(\fBsystem\fR, \fBen\fR, \fBfr\fR, \fBde\fR or \fBes\fR).
+.TP
+.B groups
+List the restorable groups: libvirt, nvram, apparmor, systemd, scripts, boot, network, storage, tool.
+.TP
+.B gui
+Open the GTK4 interface (package libvirt-backup-gui).
+.SH OPTIONS
+.TP
+.BI \-\-backup\-dir " DIR"
+Folder of the archives for this run only (persistent with
+.B install
+and
+.BR "config set" ).
+.TP
+.BI \-\-language " LANGUAGE"
+Language of the messages for this run: \fBsystem\fR, \fBen\fR, \fBfr\fR, \fBde\fR or \fBes\fR.
+Without this option the language is taken from the \fBLIBVIRT_BACKUP_LANG\fR variable, then from the
+\fBlanguage\fR setting, then from the system language (\fBLC_ALL\fR, \fBLC_MESSAGES\fR, \fBLANG\fR,
+\fBLANGUAGE\fR); English is used when none of them is translated.
+.TP
+.B \-\-json
+One JSON event per line on standard output: \fBstep\fR, \fBprogress\fR, \fBinfo\fR, \fBwarn\fR, \fBerror\fR,
+\fBresult\fR, \fBbusy\fR and \fBend\fR.
+.SH ENVIRONMENT
+.TP
+.B LIBVIRT_BACKUP_LANG
+Language of the messages (same values as \fB\-\-language\fR), overridden by that option.
+.SH FILES
+.TP
+.I /etc/libvirt-backup/config.json
+Settings. An empty backup_dir means the "virtualisation" folder of the backup user.
+.TP
+.I ~/.config/libvirt-backup/gui.json
+Preferences of the graphical interface for one user (language of the window).
+.TP
+.I /etc/systemd/system/libvirt-config-backup-watch.service
+Watcher service, created by
+.BR "libvirt-backup install" .
+.SH EXIT STATUS
+0 on success, non-zero on error.
+.SH AUTHOR
+Gilles MAGNEVILLE. Designed with the help of Claude.ai (Anthropic).
+Distributed under the GNU GPL v3 license.
+.SH SEE ALSO
+.BR virsh (1),
+.BR tar (1),
+.BR inotifywait (1)

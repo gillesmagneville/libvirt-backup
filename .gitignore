@@ -1,0 +1,10 @@
+# Compilation et paquets
+/target
+/dist
+
+# Éditeurs et fichiers temporaires
+*~
+*.swp
+.idea/
+.vscode/
+.DS_Store

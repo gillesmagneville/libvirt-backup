@@ -1,0 +1,64 @@
+[package]
+name = "libvirt-backup"
+version = "2.3.0"
+edition = "2021"
+rust-version = "1.87"
+description = "Back up and restore the configuration of a libvirt/QEMU host (command line + GTK4 interface)"
+authors = ["Gilles MAGNEVILLE"]
+license = "GPL-3.0-only"
+keywords = ["libvirt", "qemu", "backup", "restore", "gtk4"]
+categories = ["command-line-utilities"]
+readme = "README.md"
+repository = "https://github.com/gillesmagneville/libvirt-backup"
+default-run = "libvirt-backup"
+
+[lib]
+name = "libvirt_backup"
+path = "src/lib.rs"
+
+[[bin]]
+name = "libvirt-backup"
+path = "src/bin/libvirt-backup.rs"
+
+[[bin]]
+name = "libvirt-backup-gui"
+path = "src/bin/libvirt-backup-gui.rs"
+required-features = ["gui"]
+
+[[test]]
+name = "gui_smoke"
+path = "tests/gui_smoke.rs"
+harness = false
+required-features = ["gui"]
+
+[[test]]
+name = "gui_shots"
+path = "tests/gui_shots.rs"
+harness = false
+test = false
+required-features = ["gui"]
+
+[features]
+# Interface graphique GTK4 (nécessite libgtk-4-dev à la compilation).
+gui = ["dep:gtk4", "dep:async-channel"]
+
+[dependencies]
+libc = "0.2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+flate2 = "1"
+tar = "0.4"
+sha2 = "0.10"
+clap = { version = "4", features = ["derive", "wrap_help"] }
+gtk4 = { version = "0.9", features = ["v4_10"], optional = true }
+async-channel = { version = "2", optional = true }
+
+[dev-dependencies]
+tempfile = "3"
+
+[profile.release]
+opt-level = "s"
+lto = "thin"
+codegen-units = 1
+strip = true
+panic = "abort"

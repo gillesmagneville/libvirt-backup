@@ -1,0 +1,28 @@
+#!/bin/sh
+# postrm de libvirt-backup : « purge » retire le service et les réglages créés par « libvirt-backup
+# install ». Les archives de sauvegarde (dossier choisi par l'utilisateur) ne sont jamais supprimées.
+set -e
+
+SERVICE=libvirt-config-backup-watch.service
+UNIT=/etc/systemd/system/$SERVICE
+
+ours() { [ -f "$UNIT" ] && grep -qx 'ExecStart=/usr/bin/libvirt-backup watch' "$UNIT"; }
+
+case "$1" in
+purge)
+    if ours; then
+        rm -f "$UNIT"
+        if [ -d /run/systemd/system ]; then
+            systemctl daemon-reload || true
+        fi
+    fi
+    rm -rf /etc/libvirt-backup
+    ;;
+remove | upgrade | failed-upgrade | abort-install | abort-upgrade | disappear) ;;
+*)
+    echo "postrm appelé avec un argument inconnu : $1" >&2
+    exit 1
+    ;;
+esac
+
+exit 0

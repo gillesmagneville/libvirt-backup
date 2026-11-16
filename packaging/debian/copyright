@@ -1,0 +1,33 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: libvirt-backup
+Upstream-Contact: Gilles MAGNEVILLE <gilles@magneville.fr>
+Source: https://github.com/gillesmagneville/libvirt-backup
+
+Files: *
+Copyright: 2026 Gilles MAGNEVILLE
+License: GPL-3.0-only
+
+Files: CODE_OF_CONDUCT.md CODE_OF_CONDUCT.fr.md
+Copyright: 2014-2026 Coraline Ada Ehmke and the Contributor Covenant contributors
+           2026 Gilles MAGNEVILLE (adaptation)
+License: CC-BY-SA-4.0
+Comment: Contributor Covenant 3.0, adapted for this project (reporting contact and
+ enforcement note filled in).
+
+License: CC-BY-SA-4.0
+ This work is licensed under the Creative Commons Attribution-ShareAlike 4.0
+ International License. To view a copy of this license, visit
+ <https://creativecommons.org/licenses/by-sa/4.0/legalcode>.
+
+License: GPL-3.0-only
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, version 3 of the License.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the complete text of the GNU General Public
+ License version 3 can be found in "/usr/share/common-licenses/GPL-3".

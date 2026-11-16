@@ -1,0 +1,118 @@
+.TH LIBVIRT-BACKUP 1 "@DATE_MAN@" "libvirt-backup @VERSION@" "Commandes utilisateur"
+.SH NOM
+libvirt-backup \- sauvegarder et restaurer la configuration d'un h\(^ote libvirt/QEMU
+.SH SYNOPSIS
+.B libvirt-backup
+[\fIOPTIONS\fR] \fICOMMANDE\fR [\fIARGUMENTS\fR]
+.SH DESCRIPTION
+Sauvegarde la configuration d'un h\(^ote de virtualisation (d\('efinitions libvirt, r\('eseaux, pools, \('etat UEFI NVRAM et TPM,
+profils AppArmor, unit\('es systemd, r\('eglages VFIO/GRUB/initramfs, scripts locaux) dans des archives
+.B libvirt-config-*.tar.gz
+et la restaure avec les propri\('etaires, modes et ACL d'origine.
+L'outil lui-m\(^eme fait partie de chaque archive : une machine vierge se restaure \(`a partir d'une seule archive.
+.PP
+Les commandes qui exigent root se relancent elles-m\(^emes avec
+.BR sudo (8)
+quand elles sont d\('emarr\('ees depuis un terminal. L'interface graphique,
+.BR libvirt-backup-gui ,
+utilise
+.BR pkexec (1).
+.SH COMMANDES
+.TP
+.B backup \fR[\fB\-\-if\-changed\fR] [\fB\-\-dry\-run\fR] [\fB\-\-full\fR]
+Cr\('ee une archive maintenant. L'archive contient la configuration libvirt, les hooks et les scripts locaux, pas les disques.
+Par d\('efaut (\fBlean_backup\fR), les ex\('ecutables compil\('es et les fichiers de plus de 1 Mio dans /usr/local/sbin et /usr/local/bin,
+et tout fichier de plus de 16 Mio ailleurs, sont laiss\('es de c\(^ot\('e ; les fichiers ignor\('es sont list\('es.
+\fB\-\-full\fR archive tout pour cette ex\('ecution ; \fB\-\-dry\-run\fR montre ce qui serait archiv\('e
+(par groupe : fichiers, taille, ignor\('es) et n'\('ecrit rien. La dur\('ee de chaque phase est affich\('ee.
+Dans un terminal, une jauge de progression (\fB[\(**\(**\(**\(**----] 42 %\fR) indique l'avancement ; avec \fB\-\-json\fR, la m\(^eme
+progression est envoy\('ee sous forme d'\('ev\('enements \fBprogress\fR (une \fBfraction\fR entre 0 et 1).
+.TP
+.B list
+Liste les archives du dossier de sauvegarde.
+.TP
+.B info \fIARCHIVE\fR
+Montre le contenu d'une archive par groupe et le README qu'elle embarque.
+.TP
+.B verify \fR[\fIARCHIVE\fR] [\fB\-\-all\fR]
+V\('erifie l'int\('egrit\('e (CRC gzip complet) et le format.
+.TP
+.B delete \fIARCHIVE\fR... [\fB\-\-yes\fR]
+Supprime d\('efinitivement des archives du dossier de sauvegarde (num\('eros de
+.BR list ,
+noms ou \fBlatest\fR). Aucun autre fichier ne peut \(^etre supprim\('e. Mot de confirmation interactif : SUPPRIMER
+(DELETE, L\(:OSCHEN ou ELIMINAR en anglais, allemand ou espagnol ; SUPPRIMER est accept\('e dans toutes les langues) ;
+sans terminal, \fB\-\-yes\fR est obligatoire. Le lien \fIlibvirt-config-latest.tar.gz\fR suit l'archive la plus r\('ecente
+restante, ou dispara\(^it quand il n'en reste plus. Refus\('e pendant une sauvegarde ou une restauration.
+.TP
+.B restore \fR[\fIARCHIVE\fR|\fB\-\-latest\fR] [\fB\-\-only\fR \fIG,...\fR] [\fB\-\-skip\fR \fIG,...\fR] [\fB\-\-dry\-run\fR] [\fB\-\-yes\fR]
+Restaure (fusion, rien n'est supprim\('e) apr\(`es avoir cr\('e\('e une archive de s\('ecurit\('e.
+Mot de confirmation interactif : RESTAURER (RESTORE, WIEDERHERSTELLEN ou RESTAURAR en anglais, allemand ou espagnol ;
+RESTAURER est accept\('e dans toutes les langues).
+.I ARCHIVE
+est un num\('ero de
+.BR list ,
+un nom de fichier ou un chemin quelconque (cl\('e USB, copie...).
+.TP
+.B install \fR[\fB\-\-user\fR \fIU\fR] [\fB\-\-retention\fR \fIN\fR] [\fB\-\-no\-first\-backup\fR] [\fB\-\-yes\fR]
+Cr\('ee les r\('eglages et le service de surveillance, demande o\(`u vont les archives, fait une premi\(`ere sauvegarde.
+.TP
+.B uninstall \fR[\fB\-\-purge\fR]
+Retire le service de surveillance ; avec \fB\-\-purge\fR, aussi les r\('eglages. Les archives ne sont jamais supprim\('ees.
+.TP
+.B service \fR{status,start,stop,restart,enable,disable}
+Pilote le service de surveillance (libvirt-config-backup-watch.service).
+.TP
+.B status
+Installation, service et archives.
+.TP
+.B config \fR{show|set \fIKEY=VALUE\fR...}
+R\('eglages : backup_user, backup_dir, retention, safety_retention, debounce, lean_backup, language
+(\fBsystem\fR, \fBen\fR, \fBfr\fR, \fBde\fR ou \fBes\fR).
+.TP
+.B groups
+Liste les groupes restaurables : libvirt, nvram, apparmor, systemd, scripts, boot, network, storage, tool.
+.TP
+.B gui
+Ouvre l'interface GTK4 (paquet libvirt-backup-gui).
+.SH OPTIONS
+.TP
+.BI \-\-backup\-dir " DOSSIER"
+Dossier des archives pour cette seule ex\('ecution (persistant avec
+.B install
+et
+.BR "config set" ).
+.TP
+.BI \-\-language " LANGUE"
+Langue des messages pour cette ex\('ecution : \fBsystem\fR, \fBen\fR, \fBfr\fR, \fBde\fR ou \fBes\fR.
+Sans cette option, la langue vient de la variable \fBLIBVIRT_BACKUP_LANG\fR, puis du r\('eglage
+\fBlanguage\fR, puis de la langue du syst\(`eme (\fBLC_ALL\fR, \fBLC_MESSAGES\fR, \fBLANG\fR, \fBLANGUAGE\fR) ;
+l'anglais est utilis\('e si aucune n'est traduite.
+.TP
+.B \-\-json
+Un \('ev\('enement JSON par ligne sur la sortie standard : \fBstep\fR, \fBprogress\fR, \fBinfo\fR, \fBwarn\fR, \fBerror\fR,
+\fBresult\fR, \fBbusy\fR et \fBend\fR.
+.SH ENVIRONNEMENT
+.TP
+.B LIBVIRT_BACKUP_LANG
+Langue des messages (m\(^emes valeurs que \fB\-\-language\fR), pass\('ee apr\(`es cette option.
+.SH FICHIERS
+.TP
+.I /etc/libvirt-backup/config.json
+R\('eglages. Un backup_dir vide d\('esigne le dossier \(Fo virtualisation \(Fc de l'utilisateur des sauvegardes.
+.TP
+.I ~/.config/libvirt-backup/gui.json
+Pr\('ef\('erences de l'interface graphique pour un utilisateur (langue de la fen\(^etre).
+.TP
+.I /etc/systemd/system/libvirt-config-backup-watch.service
+Service de surveillance, cr\('e\('e par
+.BR "libvirt-backup install" .
+.SH CODE DE RETOUR
+0 en cas de succ\(`es, non nul en cas d'erreur.
+.SH AUTEUR
+Gilles MAGNEVILLE. Con\(,cu avec l'aide de Claude.ai (Anthropic).
+Distribu\('e sous licence GNU GPL v3.
+.SH VOIR AUSSI
+.BR virsh (1),
+.BR tar (1),
+.BR inotifywait (1)
